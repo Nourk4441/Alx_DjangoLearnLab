@@ -3,10 +3,10 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from .models import Book
-from .forms import BookSearchForm
+from .forms import ExampleForm
 
 def search_books(request):
-    form = BookSearchForm(request.GET)
+    form = ExampleForm(request.GET)
     if form.is_valid():
         query = form.cleaned_data['query']
         books = Book.objects.filter(title__icontains=query)
