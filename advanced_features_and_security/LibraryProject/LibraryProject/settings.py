@@ -36,6 +36,20 @@ ALLOWED_HOSTS = ['localhost.com', 'www.localhost.com']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Enable HSTS for one year
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to subdomains
+SECURE_HSTS_PRELOAD = True  # Allow domain to be preloaded in HSTS lists
+
+# Security headers
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable XSS filtering
+
+
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Application definition
