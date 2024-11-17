@@ -1,6 +1,12 @@
 from django.test import TestCase
+# import os
+# import django
+
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'D:\\Alx_DjangoLearnLab\\advanced_features_and_security\\LibraryProject\\LibraryProject\\settings.py')
+# django.setup()
+from bookshelf.models import Book
 from django.contrib.auth.models import User, Group
-from .models import Book
+
 
 class PermissionTestCase(TestCase):
     def setUp(self):

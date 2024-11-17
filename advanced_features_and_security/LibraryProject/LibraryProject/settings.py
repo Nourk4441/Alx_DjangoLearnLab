@@ -24,9 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-j)#gyphd^5hr&#&ny(ncvsok0vt2tsr#&q&8xpo%9-fl_6)1tf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+SECURE_BROWSER_XSS_FILTER = True  # Enables XSS protection in supported browsers.
+X_FRAME_OPTIONS = 'DENY'  # Prevents the app from being embedded in iframes.
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents MIME-type sniffing.
+
+ALLOWED_HOSTS = ['localhost.com', 'www.localhost.com']
+
+# Enforcing secure cookies for CSRF and session cookies
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
@@ -39,7 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',
+    'bookshelf.apps.BookshelfConfig',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +59,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+CSP_SCRIPT_SRC = ("'self'", 'https://apis.google.com')
 
 ROOT_URLCONF = 'LibraryProject.urls'
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book
+from bookshelf.models import Book
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from django.contrib.auth.models import Group, Permission
@@ -7,9 +7,18 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'publication_year')
+    search_fields = ('title', 'author')
+    list_filter = ('publication_year',)
+
 @receiver(post_migrate)
 def create_default_groups(sender, **kwargs):
-    book_content_type = ContentType.objects.get(app_label='bookshelf', model='Book')
+    try:
+        book_content_type = ContentType.objects.get(app_label='bookshelf', model='CustomUser')
+    except ContentType.DoesNotExist:
+        return 
 
     # Permissions
     permissions = {
@@ -53,9 +62,5 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 
 
-@admin.register(Book)
-class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'publication_year')
-    search_fields = ('title', 'author')
-    list_filter = ('publication_year',)
+
 
