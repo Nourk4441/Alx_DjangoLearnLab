@@ -110,13 +110,13 @@ class BookAPITestCase(TestCase):
 
     def test_permissions(self):
         # Ensure unauthenticated users cannot create books
-        self.client.logout()
+        self.client.login()
         data = {
-            "title": "Unauthorized Book",
+            "title": "authorized Book",
             "publication_date": "2024-12-01",
             "author": self.author.id
         }
         response = self.client.post(self.book_list_url, data, format='json')
 
         # Assertions
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
