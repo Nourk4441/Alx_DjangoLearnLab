@@ -1,14 +1,19 @@
 from django import forms
 from .models import Post,Comment,Tag
+from taggit.forms import TagWidget
 
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(required=False,help_text='Add comma-separated tags.')
+    tags = forms.CharField(
+        required=False,
+        widget=TagWidget(attrs={'placeholder': 'Add comma-separated tags'}),
+        help_text='Add comma-separated tags.',
+    )
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
 
-    def save(self, commit = True):
-        instance = super().save(commit=True)
+    def save(self, commit=True):
+        instance = super().save(commit=False)
         if commit:
             instance.save()
         if self.cleaned_data['tags']:
