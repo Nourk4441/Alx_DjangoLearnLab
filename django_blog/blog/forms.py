@@ -5,7 +5,7 @@ from taggit.forms import TagWidget
 class PostForm(forms.ModelForm):
     tags = forms.CharField(
         required=False,
-        widgets=TagWidget(attrs={'placeholder': 'Add comma-separated tags'}),
+        widgets=TagWidget(),
         help_text='Add comma-separated tags.',
     )
     class Meta:
