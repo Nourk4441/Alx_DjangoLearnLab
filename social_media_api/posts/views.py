@@ -4,6 +4,7 @@ from .serializers import PostSerializer, CommentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from notifications.models import Notification
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -23,6 +24,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+        
+
 class FeedView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -38,10 +41,19 @@ class LikePostView(APIView):
     def post(self, request, pk, *args, **kwargs):
         post = generics.get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
+        # Create Notification
+        if post.author != like:  # Prevent notifications for self-likes
+            Notification.objects.create(
+                recipient=post.author,
+                actor=like,
+                verb='liked',
+                target=post
+            )
         if not created:
             return Response({"message": "Already liked."}, status=400)
         # Notify the post owner
         return Response({"message": "Post liked."}, status=200)
+    
 
 class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -49,6 +61,14 @@ class UnlikePostView(APIView):
     def post(self, request, pk, *args, **kwargs):
         post = generics.get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post).first()
+        # Create Notification
+        if post.author != like:  # Prevent notifications for self-likes
+            Notification.objects.create(
+                recipient=post.author,
+                actor=like,
+                verb='Unliked',
+                target=post
+            )
         if not like:
             return Response({"message": "Not liked yet."}, status=400)
         like.delete()
