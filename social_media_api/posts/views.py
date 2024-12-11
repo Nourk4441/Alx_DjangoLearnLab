@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, filters,status, permissions
+from rest_framework import viewsets, permissions, filters,status, permissions, generics
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.views import APIView
@@ -36,7 +36,7 @@ class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk, *args, **kwargs):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             return Response({"message": "Already liked."}, status=400)
@@ -47,7 +47,7 @@ class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk, *args, **kwargs):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post).first()
         if not like:
             return Response({"message": "Not liked yet."}, status=400)
