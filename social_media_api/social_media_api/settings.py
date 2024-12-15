@@ -23,9 +23,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ie(yu9rdft%ba7(@ohtxq*^vy)nr4j!@z45x_os3)1rewzu!10'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yourdomain.com', 'your-ip-address']
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_SSL_REDIRECT = True  # Enable if using HTTPS
+import os
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 
 # Application definition
@@ -86,8 +93,12 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sys',
+        'USER': 'root',
+        'PASSWORD': 'Nour@2002',
+        'HOST': '127.0.0.1',  # e.g., '127.0.0.1' or an RDS endpoint
+        'PORT': '3306',  # Default MySQL port
     }
 }
 
